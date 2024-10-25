@@ -2,6 +2,7 @@ import os
 import time
 import random
 
+import checklist_object_analyser
 import source as source
 import source_to_checklist as source_to_checklist
 import pickle_actions as pickle
@@ -55,8 +56,11 @@ def convert_category_source_products_to_checklist_objects():
 def run():
     # create database table files in CSV for data.
     # tables outlined in Google Doc.
-    print("Hi")
+    category_identifier = "baseball-cards"
 
+    for file in os.listdir("checklists/" + category_identifier):
+        file_checklist_objects = pickle.open_dump_file("checklists/" + category_identifier + "/" + file.replace(".pkl",""))
+        checklist_object_analyser.analyse_variant_values_in_checklist_objects(file_checklist_objects,file.replace(".pkl",""))
 
 if __name__ == '__main__':
     run()
