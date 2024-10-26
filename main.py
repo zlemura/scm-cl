@@ -58,9 +58,24 @@ def run():
     # tables outlined in Google Doc.
     category_identifier = "baseball-cards"
 
-    for file in os.listdir("checklists/" + category_identifier):
-        file_checklist_objects = pickle.open_dump_file("checklists/" + category_identifier + "/" + file.replace(".pkl",""))
-        checklist_object_analyser.analyse_variant_values_in_checklist_objects(file_checklist_objects,file.replace(".pkl",""))
+    checklist_files = os.listdir("checklists/" + category_identifier)
+    checklist_files = reversed(checklist_files)
 
+    variant_master_list = []
+    for file in checklist_files:
+        print("Processing ", file)
+        if "2024" not in file:
+            continue
+        file_checklist_objects = pickle.open_dump_file("checklists/" + category_identifier + "/" + file.replace(".pkl",""))
+        variant_master_list += checklist_object_analyser.analyse_variant_values_in_checklist_objects(file_checklist_objects,
+                                                                                                     file.replace(".pkl",""),
+                                                                                                     variant_master_list)
+        print("Processed file ", file)
+
+    print("Found a total of ", len(variant_master_list).__str__(), " unique variant values in category.")
+
+    for variant_master in variant_master_list:
+        print(variant_master.variantName)
+        print(variant_master.printRun)
 if __name__ == '__main__':
     run()
