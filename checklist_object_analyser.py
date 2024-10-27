@@ -2,6 +2,8 @@
 
 def analyse_variant_values_in_checklist_objects(checklist_objects, set_identifier, variant_master_list):
     variant_counter = []
+    objects_with_variant_counter = 0
+    objects_with_print_run_counter = 0
 
     #print("Processing ", set_identifier)
 
@@ -10,6 +12,9 @@ def analyse_variant_values_in_checklist_objects(checklist_objects, set_identifie
         if len(object.variantName) == 0:
             continue
         variant_matched = 0
+        if object.printRun > 0:
+            objects_with_print_run_counter += 1
+        objects_with_variant_counter += 1
         #print("Going to try and match ", object.variantName, " PR ", object.printRun)
         for variant in variant_counter:
             if variant.variantName == object.variantName:
@@ -23,15 +28,23 @@ def analyse_variant_values_in_checklist_objects(checklist_objects, set_identifie
             #print("added a new variant!")
 
     '''
+    # Confirmation of analysis.
     variant_counter_total = 0
     for variant in variant_counter:
         print(variant.variantName)
         print(variant.printRun)
         print(variant.total)
-        if variant.total == 0:
-            variant_counter_total += 1
-        else:
-            variant_counter_total += (variant.total + 1)
+        variant_counter_total += (variant.total + 1)
+
+    variant_print_run_total = 0
+    for variant in variant_counter:
+        if variant.printRun > 0:
+            variant_print_run_total += (variant.total + 1)
+
+    print("I counted ", objects_with_variant_counter.__str__(), " objects with a variant.")
+    print("I counted ", objects_with_print_run_counter.__str__(), " objects with a print run.")
+    print("The analysis counted ", variant_counter_total.__str__(), " objects with a variant.")
+    print("The analysis counted ", variant_print_run_total.__str__(), " objects with a print run.")
     '''
 
     variant_master_list += apppend_unique_variant_values_to_master(variant_counter, variant_master_list)
