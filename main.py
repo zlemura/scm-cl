@@ -53,29 +53,29 @@ def convert_category_source_products_to_checklist_objects():
         source_to_checklist.convert_set_products_to_checklist_objects_by_category(category)
         print("Finished processing", category)
 
+def analyse_variants_in_category_checklist_objects():
+
+    category_identifiers = ["baseball-cards", "basketball-cards", "football-cards", "hockey-cards", "soccer-cards",
+                            "racing-cards", "wrestling-cards", "ufc-cards"]
+
+    for category in category_identifiers:
+        checklist_object_analyser.analyse_variant_values_in_checklist_objects(category)
+
+    '''
+    # Open file and print results.
+    variants = pickle.open_dump_file("checklists/variants/baseball-cards")
+
+    print(len(variants).__str__())
+
+    for variant in variants:
+        print(variant.__dict__)
+    '''
+
 def run():
     # create database table files in CSV for data.
     # tables outlined in Google Doc.
-    category_identifier = "baseball-cards"
+    analyse_variants_in_category_checklist_objects()
 
-    checklist_files = os.listdir("checklists/" + category_identifier)
-    checklist_files = reversed(checklist_files)
 
-    variant_master_list = []
-    for file in checklist_files:
-        print("Processing ", file)
-        if "2024" not in file:
-            continue
-        file_checklist_objects = pickle.open_dump_file("checklists/" + category_identifier + "/" + file.replace(".pkl",""))
-        variant_master_list += checklist_object_analyser.analyse_variant_values_in_checklist_objects(file_checklist_objects,
-                                                                                                     file.replace(".pkl",""),
-                                                                                                     variant_master_list)
-        print("Processed file ", file)
-
-    print("Found a total of ", len(variant_master_list).__str__(), " unique variant values in category.")
-
-    for variant_master in variant_master_list:
-        print(variant_master.variantName)
-        print(variant_master.printRun)
 if __name__ == '__main__':
     run()
