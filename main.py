@@ -54,12 +54,15 @@ def convert_category_source_products_to_checklist_objects():
         print("Finished processing", category)
 
 def analyse_variants_in_category_checklist_objects():
-
+    '''
     category_identifiers = ["baseball-cards", "basketball-cards", "football-cards", "hockey-cards", "soccer-cards",
+                            "racing-cards", "wrestling-cards", "ufc-cards"]
+    '''
+    category_identifiers = ["basketball-cards", "football-cards", "hockey-cards", "soccer-cards",
                             "racing-cards", "wrestling-cards", "ufc-cards"]
 
     for category in category_identifiers:
-        checklist_object_analyser.analyse_variant_values_in_checklist_objects(category)
+        checklist_object_analyser.analyse_variants_in_category_checklist_objects(category)
 
     '''
     # Open file and print results.
