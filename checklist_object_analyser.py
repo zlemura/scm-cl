@@ -102,6 +102,38 @@ def determine_if_variant_exists_in_master_list(variant_to_check, variant_master_
 
     return variant_matched
 
+def validate_checklist_objects_against_variants_per_category():
+    category_identifiers = ["baseball-cards", "basketball-cards", "football-cards", "hockey-cards", "soccer-cards",
+                            "racing-cards", "wrestling-cards", "ufc-cards"]
+
+    processing_errors = []
+
+    for category in category_identifiers:
+        print("Processing ", category)
+        checklist_object_files = os.listdir("checklists/" + category)
+        category_variants = pickle.open_dump_file("checklists/variants/" + category)
+        for file in checklist_object_files:
+            print("Processing ", file)
+            file_checklist_objects = pickle.open_dump_file("checklists/" + category + "/" + file.replace(".pkl", ""))
+            for object in file_checklist_objects:
+                if len(object.variantName) > 0:
+                    variant_matched = 0
+                    for variant in category_variants:
+                        if variant.variantName == object.variantName:
+                            if variant.printRun == object.printRun:
+                                variant_matched = 1
+                                break
+                    if variant_matched == 0:
+                        print("Wasn't able to find this object's variant in variant list!")
+                        print(object.__dict__)
+                        processing_errors.append(object)
+            print("Processed ", file)
+        print("Processed ", category)
+
+    for object in processing_errors:
+        print("Couldn't match this object to a variant.")
+        print(object.__dict__)
+
 class variant_analysis:
     def __init__(self, variantName, printRun):
         self.variantName = variantName
