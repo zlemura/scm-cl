@@ -1,4 +1,3 @@
-
 class checklist_object:
     def __init__(self, playerName, variantName, cardNumber, printRun, setName):
         self.playerName = playerName

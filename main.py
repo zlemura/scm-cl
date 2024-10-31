@@ -3,6 +3,7 @@ import time
 import random
 
 import checklist_object_analyser
+import checklist_object_export
 import source as source
 import source_to_checklist as source_to_checklist
 import pickle_actions as pickle
@@ -60,7 +61,7 @@ def run():
     ## Ensure each checklist object wiith a variant has a record in variants.
     # create database table files in CSV for data.
     # tables outlined in Google Doc.
-    checklist_object_analyser.validate_checklist_objects_against_variants_per_category()
+    checklist_object_export.export_category_checklist_objects("baseball-cards")
 
 if __name__ == '__main__':
     run()

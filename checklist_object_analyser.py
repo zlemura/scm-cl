@@ -116,6 +116,7 @@ def validate_checklist_objects_against_variants_per_category():
             print("Processing ", file)
             file_checklist_objects = pickle.open_dump_file("checklists/" + category + "/" + file.replace(".pkl", ""))
             for object in file_checklist_objects:
+                print(object.__dict__)
                 if len(object.variantName) > 0:
                     variant_matched = 0
                     for variant in category_variants:
