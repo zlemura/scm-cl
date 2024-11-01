@@ -2,20 +2,24 @@ import pickle_actions as pickle
 
 import csv
 import os
+import uuid
+
 
 def export_category_checklist_objects(category):
     '''
     TODO
-     create_variant_files_for_category
      create_print_run_files_for_category
      create_year_files_for_category
      create_enum_files_for_category
     '''
     category_objects = fetch_all_objects_for_category(category)
 
-    #create_set_files_for_category(category)
+    # create_set_files_for_category(category)
 
-    #create_player_name_files_for_category(category_objects, category)
+    # create_player_name_files_for_category(category_objects, category)
+
+    # create_variant_files_for_category(category_objects, category, 1990)
+
 
 def fetch_all_objects_for_category(category):
     category_set_file_list = os.listdir("checklists/" + category)
@@ -28,6 +32,7 @@ def fetch_all_objects_for_category(category):
 
     return category_objects
 
+
 def create_set_files_for_category(category):
     category_set_file_list = os.listdir("checklists/" + category)
 
@@ -37,36 +42,38 @@ def create_set_files_for_category(category):
         objects_to_add_to_file = []
         for object in file_objects:
             objects_to_add_to_file.append(convert_checklist_object_to_row(object))
-        write_to_csv_file("exports/sets/" + category + "/" + file_name.replace(".pkl","") + ".csv", objects_to_add_to_file)
+        write_to_csv_file("exports/sets/" + category + "/" + file_name.replace(".pkl", "") + ".csv",
+                          objects_to_add_to_file)
         print("Processed ", file_name)
 
+
 def create_player_name_files_for_category(category_objects, category):
-    a = ['a',[]]
-    b = ['b',[]]
-    c = ['c',[]]
-    d = ['d',[]]
-    e = ['e',[]]
-    f = ['f',[]]
-    g = ['g',[]]
-    h = ['h',[]]
-    i = ['i',[]]
-    j = ['j',[]]
-    k = ['k',[]]
-    l = ['l',[]]
-    m = ['m',[]]
-    n = ['n',[]]
-    o = ['o',[]]
-    p = ['p',[]]
-    q = ['q',[]]
-    r = ['r',[]]
-    s = ['s',[]]
-    t = ['t',[]]
-    u = ['u',[]]
-    v = ['v',[]]
-    w = ['w',[]]
-    x = ['x',[]]
-    y = ['y',[]]
-    z = ['z',[]]
+    a = ['a', []]
+    b = ['b', []]
+    c = ['c', []]
+    d = ['d', []]
+    e = ['e', []]
+    f = ['f', []]
+    g = ['g', []]
+    h = ['h', []]
+    i = ['i', []]
+    j = ['j', []]
+    k = ['k', []]
+    l = ['l', []]
+    m = ['m', []]
+    n = ['n', []]
+    o = ['o', []]
+    p = ['p', []]
+    q = ['q', []]
+    r = ['r', []]
+    s = ['s', []]
+    t = ['t', []]
+    u = ['u', []]
+    v = ['v', []]
+    w = ['w', []]
+    x = ['x', []]
+    y = ['y', []]
+    z = ['z', []]
 
     print("Starting to separate objects into letters.")
 
@@ -129,7 +136,7 @@ def create_player_name_files_for_category(category_objects, category):
         if first_char_of_player_name == "z":
             z[1].append(object)
 
-    all_letters = [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z]
+    all_letters = [a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z]
 
     print("Finished separating objects into letters.")
 
@@ -154,36 +161,45 @@ def create_player_name_files_for_category(category_objects, category):
         #print(letter[0])
         #print(letter[1])
         running_count += len(letter[1])
-    
+
     print("I processed a total of ", len(category_objects))
     print("I counted a total in the letters of ", running_count)
     print("Theres a difference of ", len(category_objects) - running_count)
     '''
 
-def create_variant_files_for_category(category_objects, category):
-    unique_variant_values  = []
+
+def create_variant_files_for_category(category_objects, category,year_limit):
+    unique_variant_values = []
 
     for object in category_objects:
         if len(object.variantName) == 0:
+            continue
+        if fetch_year_from_set_name(object.setName) < year_limit:
             continue
         variant_matched = 0
         for variant in unique_variant_values:
             if variant[0] == object.variantName:
                 if variant[1] == object.printRun:
                     variant_matched = 1
+                    variant[2].append(object)
+                    print("Matched an existing variant!")
+                    print(variant[0], variant[1])
                     break
         if variant_matched == 0:
-            unique_variant_values.append([object.variantName, object.printRun])
-
-    unique_variant_values_object = []
+            unique_variant_values.append([object.variantName, object.printRun, [object]])
+            print("Added a new variant to the list!")
+            print(object.variantName, object.printRun)
 
     for variant in unique_variant_values:
-        variant_objects = [variant[0], variant[1], []]
-        for object in category_objects:
-            if object.variantName == variant[0]:
-                if object.printRun == variant[1]:
-                    variant_objects[2].append(convert_checklist_object_to_row(object))
-        write_to_csv_file("exports/variants/" + category + "/" + variant[0] + "_" + variant[1] + ".csv", variant_objects[2])
+        variant_name = variant[0]
+        variant_print_run = str(variant[1])
+        variant_objects = variant[2]
+        print("Processing ", variant_name, variant_print_run)
+        objects_to_add_to_file = []
+        for object in variant_objects:
+            objects_to_add_to_file.append(convert_checklist_object_to_row(object))
+        write_to_csv_file("exports/variants/" + category + "/" + str(uuid.uuid4()) + ".csv", objects_to_add_to_file)
+        print("Processed ", variant[0], variant[1])
 
 
 def convert_checklist_object_to_row(checklist_object):
@@ -223,10 +239,12 @@ def fetch_manufacturer_from_set_name(setName):
         if manufacturer in setName:
             return manufacturer
 
+
 def write_to_csv_file(file_name, objects_to_write):
     with open(file_name, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile,  delimiter='|')
+        writer = csv.writer(csvfile, delimiter='|')
         writer.writerows(objects_to_write)
+
 
 class object_csv_structure:
     def __init__(self, playerName, variantName, cardNumber, printRun, setName, setYear, setManufacturer):
