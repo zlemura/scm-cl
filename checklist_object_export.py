@@ -183,13 +183,7 @@ def create_variant_files_for_category(category_objects, category):
             if object.variantName == variant[0]:
                 if object.printRun == variant[1]:
                     variant_objects[2].append(convert_checklist_object_to_row(object))
-        write_to_csv_file("exports/variants/" + category + "/" + variant[0] + "_" + variant[1] + ".csv",
-                          variant_objects[2])
-
-
-
-
-
+        write_to_csv_file("exports/variants/" + category + "/" + variant[0] + "_" + variant[1] + ".csv", variant_objects[2])
 
 
 def convert_checklist_object_to_row(checklist_object):
