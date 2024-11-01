@@ -160,6 +160,33 @@ def create_player_name_files_for_category(category_objects, category):
     print("Theres a difference of ", len(category_objects) - running_count)
     '''
 
+def create_variant_files_for_category(category_objects, category):
+    unique_variant_values  = []
+
+    for object in category_objects:
+        if len(object.variantName) == 0:
+            continue
+        variant_matched = 0
+        for variant in unique_variant_values:
+            if variant[0] == object.variantName:
+                if variant[1] == object.printRun:
+                    variant_matched = 1
+                    break
+        if variant_matched == 0:
+            unique_variant_values.append([object.variantName, object.printRun])
+
+    unique_variant_values_object = []
+
+    for variant in unique_variant_values:
+        variant_objects = [variant[0], variant[1], []]
+        for object in category_objects:
+            if object.variantName == variant[0]:
+                if object.printRun == variant[1]:
+                    variant_objects[2].append(convert_checklist_object_to_row(object))
+        write_to_csv_file("exports/variants/" + category + "/" + variant[0] + "_" + variant[1] + ".csv",
+                          objects_to_add_to_file)
+
+
 def convert_checklist_object_to_row(checklist_object):
     year = fetch_year_from_set_name(checklist_object.setName)
     manufacturer = fetch_manufacturer_from_set_name(checklist_object.setName)
