@@ -8,8 +8,6 @@ import uuid
 def export_category_checklist_objects(category):
     '''
     TODO
-     create_print_run_files_for_category
-     create_year_files_for_category
      create_enum_files_for_category
     '''
     category_objects = fetch_all_objects_for_category(category)
@@ -20,7 +18,7 @@ def export_category_checklist_objects(category):
 
     # create_variant_files_for_category(category_objects, category, 1990)
 
-    create_print_run_files_for_category(category_objects, category)
+    # create_print_run_files_for_category(category_objects, category)
 
 def fetch_all_objects_for_category(category):
     category_set_file_list = os.listdir("checklists/" + category)
