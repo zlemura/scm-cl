@@ -20,6 +20,7 @@ def export_category_checklist_objects(category):
 
     # create_variant_files_for_category(category_objects, category, 1990)
 
+    create_print_run_files_for_category(category_objects, category)
 
 def fetch_all_objects_for_category(category):
     category_set_file_list = os.listdir("checklists/" + category)
@@ -200,6 +201,27 @@ def create_variant_files_for_category(category_objects, category,year_limit):
             objects_to_add_to_file.append(convert_checklist_object_to_row(object))
         write_to_csv_file("exports/variants/" + category + "/" + str(uuid.uuid4()) + ".csv", objects_to_add_to_file)
         print("Processed ", variant[0], variant[1])
+
+
+def create_print_run_files_for_category(category_objects, category):
+    print_run_values = []
+
+    for object in category_objects:
+        if object.printRun == None:
+            continue
+        if object.printRun < 1:
+            continue
+        print_run_matched = 0
+        for print_run in print_run_values:
+            if print_run[0] == object.printRun:
+                print_run_matched = 1
+                print_run[1].append(convert_checklist_object_to_row(object))
+                continue
+        if print_run_matched == 0:
+            print_run_values.append([object.printRun, [convert_checklist_object_to_row(object)]])
+
+    for print_run in print_run_values:
+        write_to_csv_file("exports/print_runs/" + category + "/" + str(print_run[0]) + ".csv", print_run[1])
 
 
 def convert_checklist_object_to_row(checklist_object):
