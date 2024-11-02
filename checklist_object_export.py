@@ -11,8 +11,6 @@ def export_category_checklist_objects(category):
      create_enum_files_for_category
     '''
 
-    create_set_names_enums_list(category)
-
     #create_set_files_for_category(category)
 
     #category_objects = fetch_all_objects_for_category(category)
@@ -22,6 +20,10 @@ def export_category_checklist_objects(category):
     #create_variant_files_for_category(category_objects, category, 1990)
 
     #create_print_run_files_for_category(category_objects, category)
+
+    #create_player_names_enums_list(category)
+
+    #create_variants_enums_list(category)
 
 def fetch_all_objects_for_category(category):
     category_set_file_list = os.listdir("checklists/" + category)
@@ -285,12 +287,12 @@ def create_print_run_files_for_category(category_objects, category):
             print("Directory exists for ", category)
         write_to_csv_file("exports/print_runs/" + category + "/" + str(uuid.uuid4()) + ".csv", print_run[1])
 
-def create_set_names_enums_list(category):
+def create_player_names_enums_list(category):
     enum_list_values = []
 
     player_names_file_path = "exports/player_names/"
-    category_letter_file_names = os.listdir( player_names_file_path + category)
-    for category_letter in category_letter_file_names:
+    category_letter_directory_names = os.listdir(player_names_file_path + category)
+    for category_letter in category_letter_directory_names:
         print("Processing ", category_letter)
         category_letter_files = os.listdir(player_names_file_path + category + "/" + category_letter)
         for category_letter_file in category_letter_files:
@@ -304,6 +306,34 @@ def create_set_names_enums_list(category):
         enums_to_add_to_file.append((enum[0],enum[1]))
 
     write_to_csv_file("exports/enums/player_names.csv", enums_to_add_to_file)
+
+def create_variants_enums_list(category):
+    enum_list_values = []
+
+    variants_file_path = "exports/variants/"
+    category_variant_directory_names = os.listdir(variants_file_path + category)
+    for category_directory in category_variant_directory_names:
+        print("Processing ", category_directory)
+        category_directory_files = os.listdir(variants_file_path + category + "/" + category_directory)
+        for category_directory_file in category_directory_files:
+            #print(category_directory_file)
+            first_record = get_first_record_in_csv(variants_file_path + category + "/" + category_directory + "/" + category_directory_file)
+            if len(first_record) > 1:
+                combined_first_record = ''
+                for record in first_record:
+                    combined_first_record += record
+                first_record_split = combined_first_record.split("|")
+            else:
+                first_record_split = first_record[0].split("|")
+            #print(first_record_split)
+            enum_list_values.append([first_record_split[1], category_directory_file.replace(".csv", "")])
+        print("Processed ", category_directory)
+
+    enums_to_add_to_file = []
+    for enum in enum_list_values:
+        enums_to_add_to_file.append((enum[0], enum[1]))
+
+    write_to_csv_file("exports/enums/variants.csv", enums_to_add_to_file)
 
 
 def convert_checklist_object_to_row(checklist_object):
