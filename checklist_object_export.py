@@ -245,13 +245,14 @@ def create_variant_files_for_category(category_objects, category,year_limit):
         variant_objects = variant[2]
         print("Processing ", variant_name, variant_print_run)
         objects_to_add_to_file = []
+        first_char_of_variant_name = variant_name[0].lower()
         for object in variant_objects:
             objects_to_add_to_file.append(convert_checklist_object_to_row(object))
         try:
-            os.mkdir("exports/variants/" + category)
+            os.mkdir("exports/variants/" + category + "/" + first_char_of_variant_name)
         except FileExistsError:
             print("Directory exists for ", category)
-        write_to_csv_file("exports/variants/" + category + "/" + str(uuid.uuid4()) + ".csv", objects_to_add_to_file)
+        write_to_csv_file("exports/variants/" + category + "/" + first_char_of_variant_name + "/" + str(uuid.uuid4()) + ".csv", objects_to_add_to_file)
         print("Processed ", variant[0], variant[1])
 
 
