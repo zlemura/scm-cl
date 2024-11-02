@@ -11,6 +11,8 @@ def export_category_checklist_objects(category):
      create_enum_files_for_category
     '''
 
+    create_set_names_enums_list(category)
+
     #create_set_files_for_category(category)
 
     #category_objects = fetch_all_objects_for_category(category)
@@ -283,6 +285,26 @@ def create_print_run_files_for_category(category_objects, category):
             print("Directory exists for ", category)
         write_to_csv_file("exports/print_runs/" + category + "/" + str(uuid.uuid4()) + ".csv", print_run[1])
 
+def create_set_names_enums_list(category):
+    enum_list_values = []
+
+    player_names_file_path = "exports/player_names/"
+    category_letter_file_names = os.listdir( player_names_file_path + category)
+    for category_letter in category_letter_file_names:
+        print("Processing ", category_letter)
+        category_letter_files = os.listdir(player_names_file_path + category + "/" + category_letter)
+        for category_letter_file in category_letter_files:
+            first_record = get_first_record_in_csv(player_names_file_path + category + "/" + category_letter + "/" + category_letter_file)
+            first_record_split = first_record[0].split("|")
+            enum_list_values.append([first_record_split[0], category_letter_file.replace(".csv","")])
+        print("Processed ", category_letter)
+
+    enums_to_add_to_file = []
+    for enum in enum_list_values:
+        enums_to_add_to_file.append((enum[0],enum[1]))
+
+    write_to_csv_file("exports/enums/player_names.csv", enums_to_add_to_file)
+
 
 def convert_checklist_object_to_row(checklist_object):
     year = fetch_year_from_set_name(checklist_object.setName)
@@ -326,6 +348,19 @@ def write_to_csv_file(file_name, objects_to_write):
     with open(file_name, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter='|')
         writer.writerows(objects_to_write)
+
+def get_first_record_in_csv(file_path):
+    with open(file_path, mode='r') as file:
+        csvFile = csv.reader(file)
+        first_record = None
+        for line in csvFile:
+            if first_record == None:
+                first_record = line
+            else:
+                break
+
+    return first_record
+
 
 
 class object_csv_structure:
