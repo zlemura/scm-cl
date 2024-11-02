@@ -10,17 +10,16 @@ def export_category_checklist_objects(category):
     TODO
      create_enum_files_for_category
     '''
-    category_objects = fetch_all_objects_for_category(category)
 
-    # create_set_files_for_category(category)
+    #create_set_files_for_category(category)
 
-    # create_player_name_files_for_category_by_player_name(category_objects, category)
+    #category_objects = fetch_all_objects_for_category(category)
 
-    # create_variant_files_for_category(category_objects, category, 1990)
+    #create_player_name_files_for_category_by_player_name(category_objects, category)
 
-    # create_print_run_files_for_category(category_objects, category)
+    #create_variant_files_for_category(category_objects, category, 1990)
 
-    create_player_name_files_for_category_by_player_name(category_objects, category)
+    #create_print_run_files_for_category(category_objects, category)
 
 def fetch_all_objects_for_category(category):
     category_set_file_list = os.listdir("checklists/" + category)
@@ -75,14 +74,18 @@ def create_player_name_files_for_category_by_player_name(category_objects, categ
 
     for player_name in unique_player_name_values:
         objects_to_add_to_file = []
-        first_char_of_player_name = player_name[0]
-        first_char_of_player_name = first_char_of_player_name[0].lower()
+        player_name_for_char = player_name[0]
+        first_char_of_player_name = player_name_for_char[0].lower()
         try:
             os.mkdir("exports/player_names/" + category + "/" + first_char_of_player_name)
         except FileExistsError:
-            print("Directory exists for ", first_char_of_player_name)
+            pass
+            #print("Directory exists for ", first_char_of_player_name)
         for object in player_name[1]:
             objects_to_add_to_file.append(object)
+        if len(objects_to_add_to_file) == 0:
+            print("Found an empty list!")
+            print(player_name)
         write_to_csv_file("exports/player_names/" + category + "/" + first_char_of_player_name + "/" + str(uuid.uuid4()) + ".csv", objects_to_add_to_file)
 
     '''
@@ -240,7 +243,7 @@ def create_variant_files_for_category(category_objects, category,year_limit):
             print(object.variantName, object.printRun)
 
     for variant in unique_variant_values:
-        variant_name = variant[0]
+        variant_name = variant[0].strip()
         variant_print_run = str(variant[1])
         variant_objects = variant[2]
         print("Processing ", variant_name, variant_print_run)
@@ -251,7 +254,7 @@ def create_variant_files_for_category(category_objects, category,year_limit):
         try:
             os.mkdir("exports/variants/" + category + "/" + first_char_of_variant_name)
         except FileExistsError:
-            print("Directory exists for ", category)
+            print("Directory exists for ", first_char_of_variant_name)
         write_to_csv_file("exports/variants/" + category + "/" + first_char_of_variant_name + "/" + str(uuid.uuid4()) + ".csv", objects_to_add_to_file)
         print("Processed ", variant[0], variant[1])
 
