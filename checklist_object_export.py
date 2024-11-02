@@ -14,11 +14,13 @@ def export_category_checklist_objects(category):
 
     # create_set_files_for_category(category)
 
-    # create_player_name_files_for_category(category_objects, category)
+    # create_player_name_files_for_category_by_player_name(category_objects, category)
 
     # create_variant_files_for_category(category_objects, category, 1990)
 
     # create_print_run_files_for_category(category_objects, category)
+
+    create_player_name_files_for_category_by_player_name(category_objects, category)
 
 def fetch_all_objects_for_category(category):
     category_set_file_list = os.listdir("checklists/" + category)
@@ -41,12 +43,56 @@ def create_set_files_for_category(category):
         objects_to_add_to_file = []
         for object in file_objects:
             objects_to_add_to_file.append(convert_checklist_object_to_row(object))
-        write_to_csv_file("exports/sets/" + category + "/" + file_name.replace(".pkl", "") + ".csv",
+        try:
+            os.mkdir("exports/sets/" + category)
+        except FileExistsError:
+            print("Directory exists for ", category)
+        write_to_csv_file("exports/sets/" + category + "/" + str(uuid.uuid4()) + ".csv",
                           objects_to_add_to_file)
         print("Processed ", file_name)
 
 
-def create_player_name_files_for_category(category_objects, category):
+def create_player_name_files_for_category_by_player_name(category_objects, category):
+    unique_player_name_values = []
+
+    for object in category_objects:
+        if len(object.playerName) == 0:
+            continue
+        '''
+        if '2024 Topps Baseball' not in object.setName:
+            continue
+        '''
+        print("Processing ", object.__dict__)
+        player_name_matched = 0
+        for player_name in unique_player_name_values:
+            if player_name[0] == object.playerName:
+                player_name_matched = 1
+                player_name[1].append(convert_checklist_object_to_row(object))
+                break
+        if player_name_matched == 0:
+            unique_player_name_values.append([object.playerName, [convert_checklist_object_to_row(object)]])
+        print("Processed ", object.__dict__)
+
+    for player_name in unique_player_name_values:
+        objects_to_add_to_file = []
+        first_char_of_player_name = player_name[0]
+        first_char_of_player_name = first_char_of_player_name[0].lower()
+        try:
+            os.mkdir("exports/player_names/" + category + "/" + first_char_of_player_name)
+        except FileExistsError:
+            print("Directory exists for ", first_char_of_player_name)
+        for object in player_name[1]:
+            objects_to_add_to_file.append(object)
+        write_to_csv_file("exports/player_names/" + category + "/" + first_char_of_player_name + "/" + str(uuid.uuid4()) + ".csv", objects_to_add_to_file)
+
+    '''
+    for player_name in unique_player_name_values:
+        print(player_name[0])
+        print(len(player_name[1]))
+    '''
+
+
+def create_player_name_files_for_category_by_letter(category_objects, category):
     a = ['a', []]
     b = ['b', []]
     c = ['c', []]
@@ -149,7 +195,11 @@ def create_player_name_files_for_category(category_objects, category):
         objects_to_add_to_file = []
         for object in current_letter_obects:
             objects_to_add_to_file.append(convert_checklist_object_to_row(object))
-        write_to_csv_file("exports/player_names/" + category + "/" + current_letter + ".csv",
+        try:
+            os.mkdir("exports/player_names/" + category + "/" + current_letter)
+        except FileExistsError:
+            print("Directory exists for ", current_letter)
+        write_to_csv_file("exports/player_names/" + category + "/" + current_letter + "/" + str(uuid.uuid4()) + ".csv",
                           objects_to_add_to_file)
         print("Processed ", current_letter)
 
@@ -197,6 +247,10 @@ def create_variant_files_for_category(category_objects, category,year_limit):
         objects_to_add_to_file = []
         for object in variant_objects:
             objects_to_add_to_file.append(convert_checklist_object_to_row(object))
+        try:
+            os.mkdir("exports/variants/" + category)
+        except FileExistsError:
+            print("Directory exists for ", category)
         write_to_csv_file("exports/variants/" + category + "/" + str(uuid.uuid4()) + ".csv", objects_to_add_to_file)
         print("Processed ", variant[0], variant[1])
 
@@ -219,7 +273,11 @@ def create_print_run_files_for_category(category_objects, category):
             print_run_values.append([object.printRun, [convert_checklist_object_to_row(object)]])
 
     for print_run in print_run_values:
-        write_to_csv_file("exports/print_runs/" + category + "/" + str(print_run[0]) + ".csv", print_run[1])
+        try:
+            os.mkdir("exports/print_runs/" + category)
+        except FileExistsError:
+            print("Directory exists for ", category)
+        write_to_csv_file("exports/print_runs/" + category + "/" + str(uuid.uuid4()) + ".csv", print_run[1])
 
 
 def convert_checklist_object_to_row(checklist_object):
