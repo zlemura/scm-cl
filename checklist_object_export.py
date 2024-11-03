@@ -2,32 +2,47 @@ import pickle_actions as pickle
 
 import csv
 import os
+import re
 import uuid
 
 
 def export_category_checklist_objects(category):
-    '''
-    TODO
-     create_enum_files_for_category
-    '''
 
-    #create_set_files_for_category(category)
+    print("Creating set files for category!")
+    create_set_files_for_category(category)
+    print("Created set files for category!")
 
-    #category_objects = fetch_all_objects_for_category(category)
+    print("Fetching objects for category!")
+    category_objects = fetch_all_objects_for_category(category)
+    print("Fetched objects for category!")
 
-    #create_player_name_files_for_category_by_player_name(category_objects, category)
+    print("Creating player name files for category!")
+    create_player_name_files_for_category_by_player_name(category_objects, category)
+    print("Created player name files for category!")
 
-    #create_variant_files_for_category(category_objects, category, 1990)
+    print("Creating variant files for category!")
+    create_variant_files_for_category(category_objects, category, 1990)
+    print("Created variant files for category!")
 
-    #create_print_run_files_for_category(category_objects, category)
+    print("Creating print run files for category!")
+    create_print_run_files_for_category(category_objects, category)
+    print("Created print run files for category!")
 
-    #create_player_names_enums_list(category)
+    print("Creating player names enum list for category!")
+    create_player_names_enums_list(category)
+    print("Created player names enum list for category!")
 
-    #create_variants_enums_list(category)
+    print("Creating variant enum list for category!")
+    create_variants_enums_list(category)
+    print("Created variant enum list for category!")
 
-    #create_set_names_enum_list(category)
+    print("Creating set name enum list for category!")
+    create_set_names_enum_list(category)
+    print("Created set name enum list for category!")
 
-    #create_print_run_enum_list(category)
+    print("Creating print run enum list for category!")
+    create_print_run_enum_list(category)
+    print("Created print run enum list for category!")
 
 def fetch_all_objects_for_category(category):
     category_set_file_list = os.listdir("checklists/" + category)
@@ -54,6 +69,7 @@ def create_set_files_for_category(category):
             os.mkdir("exports/sets/" + category)
         except FileExistsError:
             print("Directory exists for ", category)
+
         write_to_csv_file("exports/sets/" + category + "/" + str(uuid.uuid4()) + ".csv",
                           objects_to_add_to_file)
         print("Processed ", file_name)
@@ -412,20 +428,28 @@ def create_print_run_enum_list(category):
 
 def convert_checklist_object_to_row(checklist_object):
     year = fetch_year_from_set_name(checklist_object.setName)
-    manufacturer = fetch_manufacturer_from_set_name(checklist_object.setName)
-    playerName = checklist_object.playerName
-    characters_to_remove = [("ō", "o")]
+    manufacturer = fetch_manufacturer_from_set_name(checklist_object.setName).strip()
+    playerName = checklist_object.playerName.strip()
+    variant_name = checklist_object.variantName.strip()
+    card_number = checklist_object.cardNumber.strip()
+    print_run = checklist_object.printRun
+    set_name = checklist_object.setName.strip()
+    characters_to_remove = [("ō", "o"), ("⁰", "o"), ("ć", "c"), ("Ş", "s")]
     for character in characters_to_remove:
         if character[0] in playerName:
             playerName = playerName.replace(character[0], character[1])
+        if character[0] in variant_name:
+            variant_name = variant_name.replace(character[0], character[1])
+        if character[0] in card_number:
+            card_number = card_number.replace(character[0], character[1])
+        if character[0] in set_name:
+            set_name = set_name.replace(character[0], character[1])
 
     '''
-    print(playerName, checklist_object.variantName, checklist_object.cardNumber, \
-           checklist_object.printRun, checklist_object.setName, year, manufacturer)
+    print(playerName, variant_name , card_number, print_run, set_name, year, manufacturer)
     '''
 
-    return playerName.strip(), checklist_object.variantName.strip(), checklist_object.cardNumber.strip(), \
-           checklist_object.printRun, checklist_object.setName.strip(), year, manufacturer.strip()
+    return playerName, variant_name , card_number, print_run, set_name, year, manufacturer
 
 
 def fetch_year_from_set_name(setName):
@@ -435,7 +459,7 @@ def fetch_year_from_set_name(setName):
 
 def fetch_manufacturer_from_set_name(setName):
     product_list = ["Bowman", "Donruss", "Finest", "Fleer", "Leaf", "Score", "Stadium Club",
-                    "Upper Deck", "Hoops", "Skybox", "Ultra", "O-Pee-Chee", "Collector's Choice"]
+                    "Upper Deck", "Hoops", "Skybox", "Ultra", "O-Pee-Chee", "Collector's Choice", "Metal"]
 
     manufacturer_list = ["Topps", "Panini"]
 
