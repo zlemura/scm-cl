@@ -7,7 +7,7 @@ import uuid
 
 
 def export_category_checklist_objects(category):
-
+    '''
     print("Creating set files for category!")
     create_set_files_for_category(category)
     print("Created set files for category!")
@@ -43,6 +43,19 @@ def export_category_checklist_objects(category):
     print("Creating print run enum list for category!")
     create_print_run_enum_list(category)
     print("Created print run enum list for category!")
+    '''
+
+    print("Fetching objects for category!")
+    category_objects = fetch_all_objects_for_category(category)
+    print("Fetched objects for category!")
+
+    print("Creating player name files for category!")
+    create_player_name_files_for_category_by_player_name(category_objects, category)
+    print("Created player name files for category!")
+
+    print("Creating player names enum list for category!")
+    create_player_names_enums_list(category)
+    print("Created player names enum list for category!")
 
 def fetch_all_objects_for_category(category):
     category_set_file_list = os.listdir("checklists/" + category)
@@ -88,7 +101,7 @@ def create_player_name_files_for_category_by_player_name(category_objects, categ
         print("Processing ", object.__dict__)
         player_name_matched = 0
         for player_name in unique_player_name_values:
-            if player_name[0] == object.playerName:
+            if player_name[0].lower() == object.playerName.lower():
                 player_name_matched = 1
                 player_name[1].append(convert_checklist_object_to_row(object))
                 break
@@ -317,7 +330,14 @@ def create_player_names_enums_list(category):
         category_letter_files = os.listdir(player_names_file_path + category + "/" + category_letter)
         for category_letter_file in category_letter_files:
             first_record = get_first_record_in_csv(player_names_file_path + category + "/" + category_letter + "/" + category_letter_file)
-            first_record_split = first_record[0].split("|")
+            if len(first_record) > 1:
+                combined_first_record = ''
+                for record in first_record:
+                    combined_first_record += record
+                first_record_split = combined_first_record.split("|")
+            else:
+                first_record_split = first_record[0].split("|")
+            print(first_record_split)
             enum_list_values.append([first_record_split[0], category_letter_file.replace(".csv","")])
         print("Processed ", category_letter)
 
