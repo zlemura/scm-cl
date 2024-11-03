@@ -456,7 +456,7 @@ def convert_checklist_object_to_row(checklist_object):
     card_number = checklist_object.cardNumber.strip()
     print_run = checklist_object.printRun
     set_name = checklist_object.setName.strip()
-    characters_to_remove = [("ō", "o"), ("⁰", "o"), ("ć", "c"), ("Ş", "s")]
+    characters_to_remove = [("ō", "o"), ("⁰", "o"), ("ć", "c"), ("Ş", "s"), ("⁸","8")]
     for character in characters_to_remove:
         if character[0] in playerName:
             playerName = playerName.replace(character[0], character[1])
@@ -482,7 +482,8 @@ def fetch_year_from_set_name(setName):
 def fetch_manufacturer_from_set_name(setName):
     product_list = ["Bowman", "Donruss", "Finest", "Fleer", "Leaf", "Score", "Stadium Club",
                     "Upper Deck", "Hoops", "Skybox", "Ultra", "O-Pee-Chee", "Collector's Choice", "Metal", "Pro Set",
-                    "Wild Card", "Select", "Pacific", "Prestige", "Playoffs"]
+                    "Wild Card", "Select", "Pacific", "Prestige", "Playoffs", "Parkhurst", "St. Lawrence Sales",
+                    "Pinnacle", "SP Authentic", "SP", "Ultimate Collection"]
 
     manufacturer_list = ["Topps", "Panini"]
 
@@ -493,7 +494,15 @@ def fetch_manufacturer_from_set_name(setName):
     for manufacturer in manufacturer_list:
         if manufacturer in setName:
             return manufacturer
+
+    subs = [("O Pee Chee", "O-Pee-Chee")]
+
+    for sub in subs:
+        if sub[0] in setName:
+            return sub[1]
+
     print("DIDNT FIND A MANUFACTURER OR PRODUCT IN ", setName)
+    SystemExit.code(1)
 
 
 def write_to_csv_file(file_name, objects_to_write):
