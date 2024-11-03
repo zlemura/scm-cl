@@ -105,6 +105,11 @@ def create_player_name_files_for_category_by_player_name(category_objects, categ
             unique_player_name_values.append([object.playerName, [convert_checklist_object_to_row(object)]])
         print("Processed ", object.__dict__)
 
+    try:
+        os.mkdir("exports/player_names/" + category)
+    except FileExistsError:
+        print("Directory exists for ", category)
+
     for player_name in unique_player_name_values:
         objects_to_add_to_file = []
         player_name_for_char = player_name[0]
