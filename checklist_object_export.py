@@ -7,21 +7,21 @@ import uuid
 
 
 def export_category_checklist_objects(category):
-    '''
+    #'''
     print("Creating set files for category!")
     create_set_files_for_category(category)
     print("Created set files for category!")
-    '''
+    #'''
 
     print("Fetching objects for category!")
     category_objects = fetch_all_objects_for_category(category)
     print("Fetched objects for category!")
 
-    '''
+    #'''
     print("Creating player name files for category!")
     create_player_name_files_for_category_by_player_name(category_objects, category)
     print("Created player name files for category!")
-    '''
+    #'''
 
     print("Creating variant files for category!")
     create_variant_files_for_category(category_objects, category, 1990)
@@ -481,7 +481,8 @@ def fetch_year_from_set_name(setName):
 
 def fetch_manufacturer_from_set_name(setName):
     product_list = ["Bowman", "Donruss", "Finest", "Fleer", "Leaf", "Score", "Stadium Club",
-                    "Upper Deck", "Hoops", "Skybox", "Ultra", "O-Pee-Chee", "Collector's Choice", "Metal"]
+                    "Upper Deck", "Hoops", "Skybox", "Ultra", "O-Pee-Chee", "Collector's Choice", "Metal", "Pro Set",
+                    "Wild Card", "Select", "Pacific", "Prestige", "Playoffs"]
 
     manufacturer_list = ["Topps", "Panini"]
 
@@ -492,6 +493,7 @@ def fetch_manufacturer_from_set_name(setName):
     for manufacturer in manufacturer_list:
         if manufacturer in setName:
             return manufacturer
+    print("DIDNT FIND A MANUFACTURER OR PRODUCT IN ", setName)
 
 
 def write_to_csv_file(file_name, objects_to_write):
