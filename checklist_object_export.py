@@ -7,21 +7,19 @@ import uuid
 
 
 def export_category_checklist_objects(category):
-    #'''
+    '''
     print("Creating set files for category!")
     create_set_files_for_category(category)
     print("Created set files for category!")
-    #'''
+    '''
 
     print("Fetching objects for category!")
     category_objects = fetch_all_objects_for_category(category)
     print("Fetched objects for category!")
 
-    #'''
     print("Creating player name files for category!")
     create_player_name_files_for_category_by_player_name(category_objects, category)
     print("Created player name files for category!")
-    #'''
 
     print("Creating variant files for category!")
     create_variant_files_for_category(category_objects, category, 1990)
@@ -465,7 +463,8 @@ def convert_checklist_object_to_row(checklist_object):
 
     # Replace entire player names if required.
     player_names_to_check_and_replace = [("?ukasz Piszczek", "Lukasz Piszczek"),
-                                         ("Wojciech Szcz?sny", "Wojciech Szczesny")]
+                                         ("Wojciech Szcz?sny", "Wojciech Szczesny"),
+                                         ("Connor mcgregor","Conor McGregor")]
 
     for player_name in player_names_to_check_and_replace:
         if player_name[0] == playerName:
@@ -499,7 +498,8 @@ def fetch_manufacturer_from_set_name(setName):
     product_list = ["Bowman", "Donruss", "Finest", "Score", "Stadium Club",
                     "Upper Deck", "Hoops", "Skybox", "Ultra", "O-Pee-Chee", "Collector's Choice", "Metal", "Pro Set",
                     "Wild Card", "Select", "Pacific", "Prestige", "Playoffs", "Parkhurst", "St. Lawrence Sales",
-                    "Pinnacle", "SP Authentic", "SP", "Ultimate Collection", "Parkside"]
+                    "Pinnacle", "SP Authentic", "SP", "Ultimate Collection", "Parkside", "All Stars", "Monty Gum", "Scanlens",
+                    "Wonderama", "Classic WWF", "Impel WCW", "Merlin WWF", "Cardz", "WWF Magazine", "TriStar"]
 
     manufacturer_list = ["Topps", "Panini", "Futera", "Leaf", "Fleer"]
 
