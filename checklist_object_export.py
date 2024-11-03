@@ -7,11 +7,11 @@ import uuid
 
 
 def export_category_checklist_objects(category):
-    #'''
+    '''
     print("Creating set files for category!")
     create_set_files_for_category(category)
     print("Created set files for category!")
-    #'''
+    '''
 
     print("Fetching objects for category!")
     category_objects = fetch_all_objects_for_category(category)
@@ -102,7 +102,8 @@ def create_player_name_files_for_category_by_player_name(category_objects, categ
                 player_name[1].append(convert_checklist_object_to_row(object))
                 break
         if player_name_matched == 0:
-            unique_player_name_values.append([object.playerName, [convert_checklist_object_to_row(object)]])
+            row_object = convert_checklist_object_to_row(object)
+            unique_player_name_values.append([row_object[0], [row_object]])
         print("Processed ", object.__dict__)
 
     try:
@@ -461,8 +462,17 @@ def convert_checklist_object_to_row(checklist_object):
     card_number = checklist_object.cardNumber.strip()
     print_run = checklist_object.printRun
     set_name = checklist_object.setName.strip()
+
+    # Replace entire player names if required.
+    player_names_to_check_and_replace = [("?ukasz Piszczek", "Lukasz Piszczek"),
+                                         ("Wojciech Szcz?sny", "Wojciech Szczesny")]
+
+    for player_name in player_names_to_check_and_replace:
+        if player_name[0] == playerName:
+            playerName = player_name[1]
+
     characters_to_remove = [("ō", "o"), ("⁰", "o"), ("ć", "c"), ("Ş", "s"), ("⁸","8"), ("č","c"), ("Ś","S"), ("Č","C"),
-                            ("ĺ","l"),("ϋ","u"),("і","i")]
+                            ("ĺ","l"),("ϋ","u"),("і","i"), ("?","")]
     for character in characters_to_remove:
         if character[0] in playerName:
             playerName = playerName.replace(character[0], character[1])
