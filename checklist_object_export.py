@@ -7,11 +7,11 @@ import uuid
 
 
 def export_category_checklist_objects(category):
-    '''
+    #'''
     print("Creating set files for category!")
     create_set_files_for_category(category)
     print("Created set files for category!")
-    '''
+    #'''
 
     print("Fetching objects for category!")
     category_objects = fetch_all_objects_for_category(category)
@@ -472,7 +472,7 @@ def convert_checklist_object_to_row(checklist_object):
             playerName = player_name[1]
 
     characters_to_remove = [("ō", "o"), ("⁰", "o"), ("ć", "c"), ("Ş", "s"), ("⁸","8"), ("č","c"), ("Ś","S"), ("Č","C"),
-                            ("ĺ","l"),("ϋ","u"),("і","i"), ("?","")]
+                            ("ĺ","l"),("ϋ","u"),("і","i"), ("?",""), ("ę","e"),("ł","l")]
     for character in characters_to_remove:
         if character[0] in playerName:
             playerName = playerName.replace(character[0], character[1])
