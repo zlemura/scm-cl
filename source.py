@@ -1,8 +1,33 @@
 import requests
 from bs4 import BeautifulSoup
+import os
 
+import pickle_actions as pickle
 from source_product import source_product
 from source_set import source_set
+
+def fetch_set_results_for_category(category):
+    source_set_list = fetch_all_set_identifiers_for_category(category)
+    try:
+        os.mkdir("dumps/category_set_lists/" + category)
+    except FileExistsError:
+        print("Directory exists for ", category)
+    pickle.write_to_dump_file(source_set_list, "dumps/category_set_lists/" + category)
+
+    category_set_list = pickle.open_dump_file("dumps/category_set_lists/" + category)
+    counter = 1
+    for set_identifier in category_set_list:
+        print("Processing " + counter.__str__() + " of " + len(category_set_list).__str__())
+        file_path_for_set = "dumps/" + category + "/" + set_identifier.href
+        file_name_for_set = "dumps/" + category + "/" + set_identifier.href + ".pkl"
+        if os.path.isfile(file_name_for_set) == True:
+            print("File exists for " + set_identifier.href)
+            counter += 1
+            continue
+        set_product_list = fetch_set_results(set_identifier.href)
+        pickle.write_to_dump_file(set_product_list, file_path_for_set)
+        counter += 1
+        print("Finished processing " + counter.__str__() + " of " + len(category_set_list).__str__())
 
 def fetch_set_results(set_identifier):
     set_name = fetch_set_name(set_identifier)

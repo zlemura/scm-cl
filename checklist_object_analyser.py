@@ -103,7 +103,7 @@ def determine_if_variant_exists_in_master_list(variant_to_check, variant_master_
     return variant_matched
 
 def validate_checklist_objects_against_variants_per_category():
-    category_identifiers = ["baseball-cards", "basketball-cards", "football-cards", "hockey-cards", "soccer-cards",
+    category_identifiers = ["baseball-cards", "baseball-cards", "football-cards", "hockey-cards", "soccer-cards",
                             "racing-cards", "wrestling-cards", "ufc-cards"]
 
     processing_errors = []

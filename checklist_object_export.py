@@ -11,14 +11,17 @@ def export_category_checklist_objects(category):
     print("Creating set files for category!")
     create_set_files_for_category(category)
     print("Created set files for category!")
+    '''
 
     print("Fetching objects for category!")
     category_objects = fetch_all_objects_for_category(category)
     print("Fetched objects for category!")
 
+    '''
     print("Creating player name files for category!")
     create_player_name_files_for_category_by_player_name(category_objects, category)
     print("Created player name files for category!")
+    '''
 
     print("Creating variant files for category!")
     create_variant_files_for_category(category_objects, category, 1990)
@@ -43,19 +46,7 @@ def export_category_checklist_objects(category):
     print("Creating print run enum list for category!")
     create_print_run_enum_list(category)
     print("Created print run enum list for category!")
-    '''
 
-    print("Fetching objects for category!")
-    category_objects = fetch_all_objects_for_category(category)
-    print("Fetched objects for category!")
-
-    print("Creating player name files for category!")
-    create_player_name_files_for_category_by_player_name(category_objects, category)
-    print("Created player name files for category!")
-
-    print("Creating player names enum list for category!")
-    create_player_names_enums_list(category)
-    print("Created player names enum list for category!")
 
 def fetch_all_objects_for_category(category):
     category_set_file_list = os.listdir("checklists/" + category)
@@ -90,6 +81,11 @@ def create_set_files_for_category(category):
 
 def create_player_name_files_for_category_by_player_name(category_objects, category):
     unique_player_name_values = []
+
+    try:
+        os.mkdir("exports/player_names/" + category)
+    except FileExistsError:
+        print("Directory exists for ", category)
 
     for object in category_objects:
         if len(object.playerName) == 0:
@@ -279,6 +275,11 @@ def create_variant_files_for_category(category_objects, category,year_limit):
             print("Added a new variant to the list!")
             print(object.variantName, object.printRun)
 
+    try:
+        os.mkdir("exports/variants/" + category)
+    except FileExistsError:
+        print("Directory exists for ", category)
+
     for variant in unique_variant_values:
         variant_name = variant[0].strip()
         variant_print_run = str(variant[1])
@@ -313,11 +314,12 @@ def create_print_run_files_for_category(category_objects, category):
         if print_run_matched == 0:
             print_run_values.append([object.printRun, [convert_checklist_object_to_row(object)]])
 
+    try:
+        os.mkdir("exports/print_runs/" + category)
+    except FileExistsError:
+        print("Directory exists for ", category)
+
     for print_run in print_run_values:
-        try:
-            os.mkdir("exports/print_runs/" + category)
-        except FileExistsError:
-            print("Directory exists for ", category)
         write_to_csv_file("exports/print_runs/" + category + "/" + str(uuid.uuid4()) + ".csv", print_run[1])
 
 def create_player_names_enums_list(category):
