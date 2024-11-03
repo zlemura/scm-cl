@@ -456,7 +456,8 @@ def convert_checklist_object_to_row(checklist_object):
     card_number = checklist_object.cardNumber.strip()
     print_run = checklist_object.printRun
     set_name = checklist_object.setName.strip()
-    characters_to_remove = [("ō", "o"), ("⁰", "o"), ("ć", "c"), ("Ş", "s"), ("⁸","8")]
+    characters_to_remove = [("ō", "o"), ("⁰", "o"), ("ć", "c"), ("Ş", "s"), ("⁸","8"), ("č","c"), ("Ś","S"), ("Č","C"),
+                            ("ĺ","l"),("ϋ","u"),("і","i")]
     for character in characters_to_remove:
         if character[0] in playerName:
             playerName = playerName.replace(character[0], character[1])
@@ -480,12 +481,12 @@ def fetch_year_from_set_name(setName):
 
 
 def fetch_manufacturer_from_set_name(setName):
-    product_list = ["Bowman", "Donruss", "Finest", "Fleer", "Leaf", "Score", "Stadium Club",
+    product_list = ["Bowman", "Donruss", "Finest", "Score", "Stadium Club",
                     "Upper Deck", "Hoops", "Skybox", "Ultra", "O-Pee-Chee", "Collector's Choice", "Metal", "Pro Set",
                     "Wild Card", "Select", "Pacific", "Prestige", "Playoffs", "Parkhurst", "St. Lawrence Sales",
-                    "Pinnacle", "SP Authentic", "SP", "Ultimate Collection"]
+                    "Pinnacle", "SP Authentic", "SP", "Ultimate Collection", "Parkside"]
 
-    manufacturer_list = ["Topps", "Panini"]
+    manufacturer_list = ["Topps", "Panini", "Futera", "Leaf", "Fleer"]
 
     for product in product_list:
         if product in setName:
