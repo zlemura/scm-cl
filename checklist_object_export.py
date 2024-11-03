@@ -27,6 +27,8 @@ def export_category_checklist_objects(category):
 
     #create_set_names_enum_list(category)
 
+    #create_print_run_enum_list(category)
+
 def fetch_all_objects_for_category(category):
     category_set_file_list = os.listdir("checklists/" + category)
 
@@ -377,6 +379,36 @@ def create_set_names_enum_list(category):
 
     write_to_csv_file("exports/enums/" + category + "/sets.csv", enums_to_add_to_file)
 
+def create_print_run_enum_list(category):
+    enum_list_values = []
+
+    print_run_file_path = "exports/print_runs/"
+
+    category_print_runs_directory_names = os.listdir(print_run_file_path + category)
+
+    for category_print_run_file_name in category_print_runs_directory_names:
+        first_record = get_first_record_in_csv(print_run_file_path + category + "/" + category_print_run_file_name)
+        if len(first_record) > 1:
+            combined_first_record = ''
+            for record in first_record:
+                if len(record) == 0:
+                    continue
+                combined_first_record += record
+            first_record_split = combined_first_record.split("|")
+        else:
+            first_record_split = first_record[0].split("|")
+        enum_list_values.append([first_record_split[3], category_print_run_file_name.replace(".csv", "")])
+
+    enums_to_add_to_file = []
+    for enum in enum_list_values:
+        enums_to_add_to_file.append((enum[0], enum[1]))
+
+    try:
+        os.mkdir("exports/enums/" + category)
+    except FileExistsError:
+        print("Directory exists for ", category)
+
+    write_to_csv_file("exports/enums/" + category + "/print_runs.csv", enums_to_add_to_file)
 
 def convert_checklist_object_to_row(checklist_object):
     year = fetch_year_from_set_name(checklist_object.setName)
