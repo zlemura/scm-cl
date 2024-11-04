@@ -1,6 +1,7 @@
 import checklist_object_export as checklist_object_export
 import source as source
 import source_to_checklist as source_to_checklist
+import cloudflare_actions
 
 '''
 To extract data from source.
@@ -15,10 +16,28 @@ To extract data from source.
 '''
 
 def run():
-    category = 'baseball-cards'
+
+    category = 'basketball-cards'
+    #cloudflare_actions.upload_player_name_files_for_category_to_r2(category, "[a-d]")
+    #cloudflare_actions.upload_player_name_files_for_category_to_r2(category, "[e-h]")
+    #cloudflare_actions.upload_player_name_files_for_category_to_r2(category, "[i-o]")
+    #cloudflare_actions.upload_player_name_files_for_category_to_r2(category, "[p-t]")
+    #cloudflare_actions.upload_player_name_files_for_category_to_r2(category, "[u-z]")
+    #cloudflare_actions.upload_variant_files_for_category_to_r2(category, "[a-d]")
+    #cloudflare_actions.upload_variant_files_for_category_to_r2(category, "[e-h]")
+    #cloudflare_actions.upload_variant_files_for_category_to_r2(category, "[i-o]")
+    #cloudflare_actions.upload_variant_files_for_category_to_r2(category, "[p-t]")
+    #cloudflare_actions.upload_variant_files_for_category_to_r2(category, "[u-z]")
+    #cloudflare_actions.upload_print_run_files_for_category_to_r2(category)
+    #cloudflare_actions.upload_set_files_for_category_to_r2(category)
+
+
+
+    '''
+    category = ''
     # source.fetch_set_results_for_category(category)
     # source_to_checklist.convert_set_products_to_checklist_objects_by_category(category)
     checklist_object_export.export_category_checklist_objects(category)
-
+    '''
 if __name__ == '__main__':
     run()
