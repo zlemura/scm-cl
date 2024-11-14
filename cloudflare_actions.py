@@ -31,6 +31,49 @@ def upload_file(file_name, bucket_name, object_name):
         return False
     return True
 
+def delete_object(bucket_name, object_id):
+    try:
+        r2.delete_object(Bucket= bucket_name, Key = object_id)
+        print(object_id + " delete complete!")
+    except ClientError as e:
+        print(f"An error occurred: {e}")
+        return False
+    return True
+
+def get_bucket_objects(bucket_name):
+    try:
+        response = r2.list_objects_v2(Bucket=bucket_name)
+        response_content = response.get('Contents')
+        #print(object_id + " delete complete!")
+    except ClientError as e:
+        print(f"An error occurred: {e}")
+        return None
+    key_list = []
+    for item in response_content:
+        key_list.append(item.get("Key"))
+    return key_list
+
+def delete_objects_in_bucket(bucket_name):
+    objects_detected = True
+    increment_counter = 1
+    while objects_detected:
+
+        bucket_objects = get_bucket_objects(bucket_name)
+
+        if len(bucket_objects) == 0:
+            objects_detected = False
+            break
+
+        number_of_objects = len(bucket_objects) + 1
+        counter = 1
+
+        for object in bucket_objects:
+            print("Deleting object " + str(counter) + " of " + str(number_of_objects))
+            delete_object(bucket_name, object)
+            counter += 1
+        print("Finished the " + str(increment_counter) + " increment.")
+        increment_counter += 1
+
 def upload_files_for_category(category):
     async def upload_files_for_category_coroutine():
         # sleep for a moment
