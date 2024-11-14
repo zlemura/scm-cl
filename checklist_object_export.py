@@ -13,9 +13,14 @@ def export_category_checklist_objects(category):
     print("Created set files for category!")
     '''
 
+    #'''
     print("Fetching objects for category!")
     category_objects = fetch_all_objects_for_category(category)
     print("Fetched objects for category!")
+    
+    print("Creating set name files for category!")
+    create_set_files_for_category(category)
+    print("Created set name files for category!")
 
     print("Creating player name files for category!")
     create_player_name_files_for_category_by_player_name(category_objects, category)
@@ -29,6 +34,10 @@ def export_category_checklist_objects(category):
     create_print_run_files_for_category(category_objects, category)
     print("Created print run files for category!")
 
+    print("Creating set name enum list for category!")
+    create_set_names_enum_list(category)
+    print("Created set name enum list for category!")
+    
     print("Creating player names enum list for category!")
     create_player_names_enums_list(category)
     print("Created player names enum list for category!")
@@ -37,14 +46,10 @@ def export_category_checklist_objects(category):
     create_variants_enums_list(category)
     print("Created variant enum list for category!")
 
-    print("Creating set name enum list for category!")
-    create_set_names_enum_list(category)
-    print("Created set name enum list for category!")
-
     print("Creating print run enum list for category!")
     create_print_run_enum_list(category)
     print("Created print run enum list for category!")
-
+    #'''
 
 def fetch_all_objects_for_category(category):
     category_set_file_list = os.listdir("checklists/" + category)
@@ -60,6 +65,11 @@ def fetch_all_objects_for_category(category):
 
 def create_set_files_for_category(category):
     category_set_file_list = os.listdir("checklists/" + category)
+
+    try:
+        os.mkdir("exports/sets/" + category)
+    except FileExistsError:
+        print("Directory exists for ", category)
 
     for file_name in category_set_file_list:
         print("Processing ", file_name)
@@ -89,13 +99,14 @@ def create_player_name_files_for_category_by_player_name(category_objects, categ
         if len(object.playerName) == 0:
             continue
         '''
-        if '2024 Topps Baseball' not in object.setName:
-            continue
+        if '2022 Panini Donruss UFC Signature Series UFC' not in object.setName:
+            if 'Conor McGregor' not in object.playerName:
+                continue
         '''
         print("Processing ", object.__dict__)
         player_name_matched = 0
         for player_name in unique_player_name_values:
-            if player_name[0].lower() == object.playerName.lower():
+            if player_name[0].lower().strip() == object.playerName.lower().strip():
                 player_name_matched = 1
                 player_name[1].append(convert_checklist_object_to_row(object))
                 break
@@ -260,6 +271,11 @@ def create_player_name_files_for_category_by_letter(category_objects, category):
 def create_variant_files_for_category(category_objects, category,year_limit):
     unique_variant_values = []
 
+    try:
+        os.mkdir("exports/variants/" + category)
+    except FileExistsError:
+        print("Directory exists for ", category)
+
     for object in category_objects:
         if len(object.variantName) == 0:
             continue
@@ -267,13 +283,13 @@ def create_variant_files_for_category(category_objects, category,year_limit):
             continue
         variant_matched = 0
         for variant in unique_variant_values:
-            if variant[0] == object.variantName:
-                if variant[1] == object.printRun:
-                    variant_matched = 1
-                    variant[2].append(object)
-                    print("Matched an existing variant!")
-                    print(variant[0], variant[1])
-                    break
+            if variant[0].upper().strip() == object.variantName.upper().strip():
+                ##if variant[1] == object.printRun:
+                variant_matched = 1
+                variant[2].append(object)
+                print("Matched an existing variant!")
+                print(variant[0], variant[1])
+                break
         if variant_matched == 0:
             unique_variant_values.append([object.variantName, object.printRun, [object]])
             print("Added a new variant to the list!")
@@ -304,6 +320,11 @@ def create_variant_files_for_category(category_objects, category,year_limit):
 def create_print_run_files_for_category(category_objects, category):
     print_run_values = []
 
+    try:
+        os.mkdir("exports/print_runs/" + category)
+    except FileExistsError:
+        print("Directory exists for ", category)
+
     for object in category_objects:
         if object.printRun == None:
             continue
@@ -329,6 +350,11 @@ def create_print_run_files_for_category(category_objects, category):
 def create_player_names_enums_list(category):
     enum_list_values = []
 
+    try:
+        os.mkdir("exports/enums/" + category)
+    except FileExistsError:
+        print("Directory exists for ", category)
+
     player_names_file_path = "exports/player_names/"
     category_letter_directory_names = os.listdir(player_names_file_path + category)
     for category_letter in category_letter_directory_names:
@@ -351,15 +377,16 @@ def create_player_names_enums_list(category):
     for enum in enum_list_values:
         enums_to_add_to_file.append((enum[0],enum[1]))
 
+    write_to_csv_file("exports/enums/" + category + "/player_names.csv", enums_to_add_to_file)
+
+def create_variants_enums_list(category):
+    enum_list_values = []
+
     try:
         os.mkdir("exports/enums/" + category)
     except FileExistsError:
         print("Directory exists for ", category)
 
-    write_to_csv_file("exports/enums/" + category + "/player_names.csv", enums_to_add_to_file)
-
-def create_variants_enums_list(category):
-    enum_list_values = []
 
     variants_file_path = "exports/variants/"
     category_variant_directory_names = os.listdir(variants_file_path + category)
@@ -384,15 +411,15 @@ def create_variants_enums_list(category):
     for enum in enum_list_values:
         enums_to_add_to_file.append((enum[0], enum[1]))
 
-    try:
-        os.mkdir("exports/enums/" + category)
-    except FileExistsError:
-        print("Directory exists for ", category)
-
     write_to_csv_file("exports/enums/" + category + "/variants.csv", enums_to_add_to_file)
 
 def create_set_names_enum_list(category):
     enum_list_values = []
+
+    try:
+        os.mkdir("exports/enums/" + category)
+    except FileExistsError:
+        print("Directory exists for ", category)
 
     set_names_file_path = "exports/sets/"
     category_set_names_directory_names = os.listdir(set_names_file_path + category)
@@ -414,15 +441,15 @@ def create_set_names_enum_list(category):
     for enum in enum_list_values:
         enums_to_add_to_file.append((enum[0], enum[1]))
 
-    try:
-        os.mkdir("exports/enums/" + category)
-    except FileExistsError:
-        print("Directory exists for ", category)
-
     write_to_csv_file("exports/enums/" + category + "/sets.csv", enums_to_add_to_file)
 
 def create_print_run_enum_list(category):
     enum_list_values = []
+
+    try:
+        os.mkdir("exports/enums/" + category)
+    except FileExistsError:
+        print("Directory exists for ", category)
 
     print_run_file_path = "exports/print_runs/"
 
@@ -444,11 +471,6 @@ def create_print_run_enum_list(category):
     enums_to_add_to_file = []
     for enum in enum_list_values:
         enums_to_add_to_file.append((enum[0], enum[1]))
-
-    try:
-        os.mkdir("exports/enums/" + category)
-    except FileExistsError:
-        print("Directory exists for ", category)
 
     write_to_csv_file("exports/enums/" + category + "/print_runs.csv", enums_to_add_to_file)
 
