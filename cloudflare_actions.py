@@ -72,6 +72,7 @@ def delete_objects_in_bucket(bucket_name):
             delete_object(bucket_name, object)
             counter += 1
         print("Finished the " + str(increment_counter) + " increment.")
+        print("Deleted a total of " + str(increment_counter * 1000) + " objects so far!")
         increment_counter += 1
 
 def upload_files_for_category(category):
