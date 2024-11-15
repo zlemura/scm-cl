@@ -4,6 +4,7 @@ import os
 import boto3
 from botocore.client import Config
 import json
+import re
 
 import boto3
 import os
@@ -162,7 +163,7 @@ def upload_player_name_files_for_category_to_r2(category, character_range):
             if bool(re.search(character_range,folder)) == 0:
                 continue
         if character_range == None:
-            if folder.isalpha() == True:
+            if re.search("[a-z]", folder):
                 continue
         folder_path = player_name_directory_for_category + "/" + folder
         folder_files = os.listdir(folder_path)
@@ -180,7 +181,7 @@ def upload_variant_files_for_category_to_r2(category, character_range):
             if bool(re.search(character_range, folder)) == 0:
                 continue
         if character_range == None:
-            if folder.isalpha() == True:
+            if re.search("[a-z]", folder):
                 continue
         folder_path = variant_directory_for_category + "/" + folder
         folder_files = os.listdir(folder_path)
