@@ -2,6 +2,36 @@ import os
 
 import pickle_actions as pickle
 
+def determine_number_of_files_to_be_uploaded_for_category(category):
+    set_name_path = "exports/sets/" + category
+    set_name_directories = os.listdir(set_name_path)
+    set_name_total = len(set_name_directories)
+
+    player_name_path = "exports/player_names/" + category
+    player_name_directories = os.listdir(player_name_path)
+    player_name_total = 0
+    for directory in player_name_directories:
+        directory_files = os.listdir(player_name_path + "/" + directory)
+        player_name_total += len(directory_files)
+
+    variant_path = "exports/variants/" + category
+    variant_directories = os.listdir(variant_path)
+    variant_total = 0
+    for directory in variant_directories:
+        directory_files = os.listdir(variant_path + "/" + directory)
+        variant_total += len(directory_files)
+
+    print_run_path = "exports/print_runs/" + category
+    print_run_directories = os.listdir(print_run_path)
+    print_run_total = len(print_run_directories)
+
+    overall_total = set_name_total + player_name_total + variant_total + print_run_total
+
+    print("There are a total of " + str(overall_total) + " files for this category - " + category)
+    print("Summary - Sets:" + str(set_name_total) + " Player names:" + str(player_name_total) +
+          " Variants:" + str(variant_total) + " Print runs:" + str(print_run_total))
+
+
 def analyse_variants_in_category_checklist_objects(category_identifier):
     checklist_files = os.listdir("checklists/" + category_identifier)
     total_checklist_files = len(checklist_files)
